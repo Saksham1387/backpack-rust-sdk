@@ -1,5 +1,3 @@
-use serde::Deserialize;
-
 #[derive(Debug, Clone, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ImfFunction {

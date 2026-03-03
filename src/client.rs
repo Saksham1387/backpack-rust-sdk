@@ -69,7 +69,18 @@ impl BackpackClient {
     where
         T: serde::de::DeserializeOwned,
     {
-        let url = format!("{}{}", self.base_url, path);
+        self.get_with_params(path, "").await
+    }
+
+    pub(crate) async fn get_with_params<T>(&self, path: &str, params: &str) -> Result<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        let url = if params.is_empty() {
+            format!("{}{}", self.base_url, path)
+        } else {
+            format!("{}{}?{}", self.base_url, path, params)
+        };
 
         let response = self.http.get(&url).send().await?;
 

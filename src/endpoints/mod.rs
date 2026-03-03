@@ -1,4 +1,13 @@
 mod assests;
+mod borrow_lend;
 mod collateral;
-
+mod depth;
+mod funding_rate;
 mod get_account;
+mod klines;
+mod mark_price;
+mod markets;
+mod open_interest;
+mod prediction;
+mod ticker;
+mod trades;
