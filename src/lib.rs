@@ -1,6 +1,7 @@
 mod client;
 mod endpoints;
 mod error;
+mod signer;
 mod types;
 
 pub use client::BackpackClient;

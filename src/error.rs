@@ -9,6 +9,12 @@ pub enum BackpackError {
     Api { status: u16, message: String },
     #[error("Parsing error")]
     Parse(String),
+
+    #[error("Invalid API key")]
+    InvalidApiKey(String),
+
+    #[error("Missing API key")]
+    MissingApiKey,
 }
 
 pub type Result<T> = std::result::Result<T, BackpackError>;
