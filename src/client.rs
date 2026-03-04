@@ -6,10 +6,12 @@ use crate::{
 use reqwest::{Client, Response};
 use serde::Serialize;
 const BASE_URL: &str = "https://api.backpack.exchange";
+const BASE_URL_WS: &str = "wss://ws.backpack.exchange";
 
 pub struct BackpackClient {
     http: Client,
     base_url: String,
+    ws_url: Option<String>,
 
     signer: Option<Signer>,
 }
@@ -20,6 +22,7 @@ impl BackpackClient {
             http: Client::new(),
             base_url: BASE_URL.to_string(),
             signer: None,
+            ws_url: Some(BASE_URL_WS.to_string()),
         }
     }
 
@@ -30,6 +33,7 @@ impl BackpackClient {
             http: Client::new(),
             base_url: BASE_URL.to_string(),
             signer: Some(signer),
+            ws_url: Some(BASE_URL_WS.to_string()),
         })
     }
 

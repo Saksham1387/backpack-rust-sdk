@@ -15,6 +15,9 @@ pub enum BackpackError {
 
     #[error("Missing API key")]
     MissingApiKey,
+
+    #[error("WebSocket Error: {0}")]
+    WebSocket(String),
 }
 
 pub type Result<T> = std::result::Result<T, BackpackError>;
