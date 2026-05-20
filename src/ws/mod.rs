@@ -7,10 +7,6 @@ use tokio::sync::mpsc::Sender;
 use tokio_tungstenite::connect_async;
 use tokio_tungstenite::tungstenite::protocol::Message;
 
-fn is_private_stream(stream: &str) -> bool {
-    stream.starts_with("account.")
-}
-
 impl BackpackClient {
     // subscribe
     // subscribe to multiple
@@ -80,7 +76,7 @@ impl BackpackClient {
                     break;
                 }
 
-                Err(erro) => {
+                Err(_) => {
                     break;
                 }
 

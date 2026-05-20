@@ -1,6 +1,6 @@
 use base64::{Engine, prelude::BASE64_STANDARD};
 use chrono::Utc;
-use ed25519_dalek::{SigningKey, VerifyingKey, ed25519::signature::SignerMut};
+use ed25519_dalek::{SigningKey, ed25519::signature::SignerMut};
 
 use crate::BackpackError;
 
@@ -15,7 +15,7 @@ pub struct AuthHeaders {
 
 pub struct Signer {
     signing_key: SigningKey,
-    verifying_key: VerifyingKey,
+    // verifying_key: VerifyingKey,
     api_key_header: String,
 }
 
@@ -27,7 +27,7 @@ impl Signer {
                 BackpackError::InvalidApiKey(format!("private key is a valid base64 {}", e))
             })?;
 
-        let key_arrays = key_bytes.try_into().map_err(|e| {
+        let key_arrays = key_bytes.try_into().map_err(|_| {
             BackpackError::InvalidApiKey(
                 "private key must be exactly 32 bytes (44 base64 chars)".to_string(),
             )
@@ -41,7 +41,7 @@ impl Signer {
 
         Ok(Self {
             signing_key,
-            verifying_key,
+            // verifying_key,
             api_key_header,
         })
     }

@@ -4,14 +4,14 @@ use crate::{
 };
 
 use reqwest::{Client, Response};
-use serde::Serialize;
+// use serde::Serialize;
 const BASE_URL: &str = "https://api.backpack.exchange";
-const BASE_URL_WS: &str = "wss://ws.backpack.exchange";
+// const BASE_URL_WS: &str = "wss://ws.backpack.exchange";
 
 pub struct BackpackClient {
     http: Client,
     base_url: String,
-    ws_url: Option<String>,
+    // ws_url: Option<String>,
 
     signer: Option<Signer>,
 }
@@ -22,7 +22,7 @@ impl BackpackClient {
             http: Client::new(),
             base_url: BASE_URL.to_string(),
             signer: None,
-            ws_url: Some(BASE_URL_WS.to_string()),
+            // ws_url: Some(BASE_URL_WS.to_string()),
         }
     }
 
@@ -33,7 +33,7 @@ impl BackpackClient {
             http: Client::new(),
             base_url: BASE_URL.to_string(),
             signer: Some(signer),
-            ws_url: Some(BASE_URL_WS.to_string()),
+            // ws_url: Some(BASE_URL_WS.to_string()),
         })
     }
 
@@ -132,59 +132,59 @@ impl BackpackClient {
         serde_json::from_str(&body).map_err(|e| BackpackError::Parse(e.to_string()))
     }
 
-    pub(crate) async fn signed_post<T: serde::de::DeserializeOwned, B: Serialize>(
-        &self,
-        instruction: &str,
-        path: &str,
-        params: &str, // sorted query string (for signing)
-        body: &B,     // the actual request body struct (serialized to JSON)
-    ) -> Result<T> {
-        let signer = self.signer.as_ref().ok_or(BackpackError::MissingApiKey)?;
-        let headers = signer.sign(instruction, params);
-        let url = format!("{}{}", self.base_url, path);
+    // pub(crate) async fn signed_post<T: serde::de::DeserializeOwned, B: Serialize>(
+    //     &self,
+    //     instruction: &str,
+    //     path: &str,
+    //     params: &str, // sorted query string (for signing)
+    //     body: &B,     // the actual request body struct (serialized to JSON)
+    // ) -> Result<T> {
+    //     let signer = self.signer.as_ref().ok_or(BackpackError::MissingApiKey)?;
+    //     let headers = signer.sign(instruction, params);
+    //     let url = format!("{}{}", self.base_url, path);
 
-        let response = self
-            .http
-            .post(&url)
-            .header("X-API-Key", &headers.x_api_key)
-            .header("X-Signature", &headers.x_signature)
-            .header("X-Timestamp", &headers.x_timestamp)
-            .header("X-Window", &headers.x_window)
-            .json(body) // serializes body to JSON, sets Content-Type: application/json
-            .send()
-            .await?;
+    //     let response = self
+    //         .http
+    //         .post(&url)
+    //         .header("X-API-Key", &headers.x_api_key)
+    //         .header("X-Signature", &headers.x_signature)
+    //         .header("X-Timestamp", &headers.x_timestamp)
+    //         .header("X-Window", &headers.x_window)
+    //         .json(body) // serializes body to JSON, sets Content-Type: application/json
+    //         .send()
+    //         .await?;
 
-        Self::parse_response(response).await
-    }
+    //     Self::parse_response(response).await
+    // }
 
-    pub(crate) async fn signed_delete<T, B>(
-        &self,
-        instruction: &str,
-        path: &str,
-        params: &str,
-        body: &B,
-    ) -> Result<T>
-    where
-        T: serde::de::DeserializeOwned,
-        B: Serialize,
-    {
-        let signer = self.signer.as_ref().ok_or(BackpackError::MissingApiKey)?;
-        let headers = signer.sign(instruction, params);
-        let url = format!("{}{}", self.base_url, path);
+    // pub(crate) async fn signed_delete<T, B>(
+    //     &self,
+    //     instruction: &str,
+    //     path: &str,
+    //     params: &str,
+    //     body: &B,
+    // ) -> Result<T>
+    // where
+    //     T: serde::de::DeserializeOwned,
+    //     B: Serialize,
+    // {
+    //     let signer = self.signer.as_ref().ok_or(BackpackError::MissingApiKey)?;
+    //     let headers = signer.sign(instruction, params);
+    //     let url = format!("{}{}", self.base_url, path);
 
-        let response = self
-            .http
-            .delete(&url)
-            .header("X-API-Key", &headers.x_api_key)
-            .header("X-Signature", &headers.x_signature)
-            .header("X-Timestamp", &headers.x_timestamp)
-            .header("X-Window", &headers.x_window)
-            .json(body)
-            .send()
-            .await?;
+    //     let response = self
+    //         .http
+    //         .delete(&url)
+    //         .header("X-API-Key", &headers.x_api_key)
+    //         .header("X-Signature", &headers.x_signature)
+    //         .header("X-Timestamp", &headers.x_timestamp)
+    //         .header("X-Window", &headers.x_window)
+    //         .json(body)
+    //         .send()
+    //         .await?;
 
-        Self::parse_response(response).await
-    }
+    //     Self::parse_response(response).await
+    // }
 }
 
 impl Default for BackpackClient {
