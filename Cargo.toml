@@ -2,6 +2,9 @@
 name = "backpack-sdk-rust"
 version = "0.1.0"
 edition = "2024"
+description = "Backpack API SDK for Rust"
+license = "MIT"  # or whichever
+repository = "https://github.com/your-org/backpack-sdk-rust"
 
 [dependencies]
 base64 = "0.22.1"

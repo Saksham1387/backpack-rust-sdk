@@ -37,15 +37,12 @@ impl BackpackClient {
         })
     }
 
-    pub(crate) async fn signed_get<T>(
+    pub(crate) async fn signed_get<T: serde::de::DeserializeOwned>(
         &self,
         instruction: &str,
         path: &str,
         params: &str,
-    ) -> Result<T>
-    where
-        T: serde::de::DeserializeOwned,
-    {
+    ) -> Result<T> {
         let signer = self.signer.as_ref().ok_or(BackpackError::MissingApiKey)?;
 
         let headers = signer.sign(instruction, params);
@@ -69,17 +66,15 @@ impl BackpackClient {
         Self::parse_response(response).await
     }
 
-    pub(crate) async fn get<T>(&self, path: &str) -> Result<T>
-    where
-        T: serde::de::DeserializeOwned,
-    {
+    pub(crate) async fn get<T: serde::de::DeserializeOwned>(&self, path: &str) -> Result<T> {
         self.get_with_params(path, "").await
     }
 
-    pub(crate) async fn get_with_params<T>(&self, path: &str, params: &str) -> Result<T>
-    where
-        T: serde::de::DeserializeOwned,
-    {
+    pub(crate) async fn get_with_params<T: serde::de::DeserializeOwned>(
+        &self,
+        path: &str,
+        params: &str,
+    ) -> Result<T> {
         let url = if params.is_empty() {
             format!("{}{}", self.base_url, path)
         } else {
@@ -137,17 +132,13 @@ impl BackpackClient {
         serde_json::from_str(&body).map_err(|e| BackpackError::Parse(e.to_string()))
     }
 
-    pub(crate) async fn signed_post<T, B>(
+    pub(crate) async fn signed_post<T: serde::de::DeserializeOwned, B: Serialize>(
         &self,
         instruction: &str,
         path: &str,
         params: &str, // sorted query string (for signing)
         body: &B,     // the actual request body struct (serialized to JSON)
-    ) -> Result<T>
-    where
-        T: serde::de::DeserializeOwned,
-        B: Serialize,
-    {
+    ) -> Result<T> {
         let signer = self.signer.as_ref().ok_or(BackpackError::MissingApiKey)?;
         let headers = signer.sign(instruction, params);
         let url = format!("{}{}", self.base_url, path);
